@@ -1,6 +1,5 @@
 import express from 'express';
 import helmet from 'helmet';
-import logger from 'jet-logger';
 import winston from 'winston';
 import expressWinston from 'express-winston';
 import helloRouter from './routes/hello';
@@ -40,7 +39,7 @@ app.use(
 );
 
 app.listen(port, () => {
-    logger.info(`Server running at ${port}`);
+    console.log(`Server running at ${port}!`);
 });
 
 // Export default
