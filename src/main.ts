@@ -40,7 +40,7 @@ app.use(
 );
 
 app.listen(port, () => {
-    logger.info(`Server running at ` + port);
+    logger.info(`Server running at ${port}`);
 });
 
 // Export default
