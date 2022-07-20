@@ -1,4 +1,10 @@
 {
+    "name": "express-template",
+    "version": "1.0.0",
+    "main": "index.js",
+    "repository": "https://github.com/DefectingCat/express-template.git",
+    "author": "DefectingCat <i@defect.ink>",
+    "license": "MIT",
     "devDependencies": {
         "@types/express": "^4.17.13",
         "@types/node": "^18.0.6",
