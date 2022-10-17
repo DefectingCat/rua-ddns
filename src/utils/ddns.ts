@@ -68,9 +68,9 @@ export const getIp = async () => {
                         .map((text) => text.trim())[0]
                         .split(' ')[1]
             );
-            const target = address.find(
-                (item) => item && !item.startsWith('fd')
-            );
+            const target = address
+                .find((item) => item && !item.startsWith('fd'))
+                ?.split('/')[0];
             return target;
         }
         /**

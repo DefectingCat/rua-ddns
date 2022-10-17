@@ -133,6 +133,13 @@
   resolved "https://registry.npmmirror.com/@types/minimist/-/minimist-1.2.2.tgz#ee771e2ba4b3dc5b372935d549fd9617bf345b8c"
   integrity sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==
 
+"@types/node-schedule@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.npmmirror.com/@types/node-schedule/-/node-schedule-2.1.0.tgz#60375640c0509bab963573def9d1f417f438c290"
+  integrity sha512-NiTwl8YN3v/1YCKrDFSmCTkVxFDylueEqsOFdgF+vPsm+AlyJKGAo5yzX1FiOxPsZiN6/r8gJitYx2EaSuBmmg==
+  dependencies:
+    "@types/node" "*"
+
 "@types/node@*":
   version "17.0.31"
   resolved "https://registry.npmmirror.com/@types/node/-/node-17.0.31.tgz#a5bb84ecfa27eec5e1c802c6bbf8139bdb163a5d"

@@ -4,8 +4,7 @@ import winston from 'winston';
 import expressWinston from 'express-winston';
 import helloRouter from './routes/hello.js';
 import 'zx/globals';
-import { getIp, listRecords } from './utils/ddns.js';
-import config from './config.js';
+import { callback } from './utils/jobs.js';
 
 const app = express();
 const port = 4000;
@@ -45,16 +44,7 @@ app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
 
-(async () => {
-    const ip = await getIp();
-    console.log(ip);
-    console.log(
-        await listRecords({
-            domain: config.domain,
-            sub_domain: `${config.subDomain}.${config.domain}`,
-        })
-    );
-})();
+callback();
 
 // Export default
 export default app;
