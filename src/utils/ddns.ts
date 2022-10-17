@@ -50,10 +50,13 @@ export const getIp = async () => {
             );
             return target;
         }
+        /**
+         * @TODO Add ipv4 support.
+         */
         case 'inet': {
-            const ip =
-                await $`ip add show ${projectConfig.devName} | grep "${projectConfig.netType}" | grep "scope global"`;
-
+            const ip = (
+                await $`ip add show ${projectConfig.devName} | grep "${projectConfig.netType}" | grep "scope global"`
+            ).stdout;
             return ip;
         }
         default:
