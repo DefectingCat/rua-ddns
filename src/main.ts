@@ -4,10 +4,17 @@ import helmet from 'helmet';
 import winston from 'winston';
 import 'zx/globals';
 import helloRouter from './routes/hello.js';
-import { scheduleDDNS } from './utils/jobs.js';
+import { Server } from 'socket.io';
+import { createServer } from 'http';
+import logger from './utils/logger.js';
+import config from './config.js';
+import './agent/index.js';
 
+const { port } = config;
+const socketPort = port - 1;
 const app = express();
-const port = 4000;
+const httpServer = createServer(app);
+export const io = new Server(httpServer);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -41,10 +48,18 @@ app.use(
 );
 
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+    logger(`Server running at http://localhost:${port}`);
+});
+httpServer.listen(socketPort, () => {
+    logger(`Socker Server running at http://localhost:${socketPort}`);
 });
 
-scheduleDDNS();
+io.on('connection', (socket) => {
+    logger(`Socket client connect success! ${socket.id}`);
+    socket.emit('pong', 'Connect success.');
+});
+
+// scheduleDDNS();
 
 // Export default
 export default app;

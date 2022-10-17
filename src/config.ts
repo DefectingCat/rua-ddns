@@ -4,4 +4,7 @@ export default {
     netType: 'inet6',
     domain: 'rua.plus',
     subDomain: 'host',
+
+    // listen port
+    port: 4000,
 };
