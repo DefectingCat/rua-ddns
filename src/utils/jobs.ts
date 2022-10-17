@@ -1,38 +1,38 @@
 import schedule from 'node-schedule';
 import config from '../config.js';
-import { addRecord, getIp, ListRecords, listRecords } from './ddns.js';
+import {
+    addRecord,
+    getIp,
+    ListRecords,
+    listRecords,
+    modifyRecord,
+} from './ddns.js';
 import logger from './logger.js';
 
 let lastIp = '';
 let list: null | ListRecords = null;
 
 const updateRecord = async () => {
+    const props = {
+        domain: config.domain,
+        sub_domain: config.subDomain,
+        record_line: '默认',
+        record_type:
+            config.netType === 'inet6' ? 'AAAA' : ('A' as 'A' | 'AAAA'),
+        value: lastIp,
+    };
+
     if (!list) {
         list = await listRecords({
             domain: config.domain,
             sub_domain: config.subDomain,
         });
     }
-    if (list.status.code === '10') {
+    if (list.status.code === '10  ') {
         // add
         logger(`Starting add new record.`);
-        const result = await addRecord({
-            domain: config.domain,
-            sub_domain: config.subDomain,
-            record_line: '默认',
-            record_type: config.netType === 'inet6' ? 'AAAA' : 'A',
-            value: lastIp,
-        });
-        logger(
-            {
-                domain: config.domain,
-                sub_domain: config.subDomain,
-                record_line: '默认',
-                record_type: config.netType === 'inet6' ? 'AAAA' : 'A',
-                value: lastIp,
-            },
-            result
-        );
+        const result = await addRecord(props);
+        logger(props, result);
         if (result.status.code === '1') {
             logger(
                 `Add DNS record ${config.subDomain}.${config.domain} to ${lastIp} success!`
@@ -43,6 +43,19 @@ const updateRecord = async () => {
         }
     } else {
         // update
+        const result = await modifyRecord({
+            ...props,
+            record_id: list.records[0].id,
+        });
+        logger(props, result);
+        if (result.status.code === '1') {
+            logger(
+                `Update DNS record ${config.subDomain}.${config.domain} to ${lastIp} success!`
+            );
+        } else {
+            console.error(result);
+            throw new Error(result.status.message);
+        }
     }
 };
 

@@ -12,7 +12,7 @@ const commonParams = {
     format: 'json',
 };
 
-type ListRecordsParams = {
+type ListRecordsProps = {
     domain: string;
     sub_domain?: string;
 };
@@ -46,28 +46,42 @@ export interface RecordList {
 /**
  * https://docs.dnspod.cn/api/record-list/
  */
-export const listRecords = async (params: ListRecordsParams) => {
+export const listRecords = async (props: ListRecordsProps) => {
     const result = await http.post<ListRecords>(
         '/Record.List',
         new URLSearchParams({
             ...commonParams,
-            ...params,
+            ...props,
         })
     );
     return result.data;
 };
 
-type AddParams = {
+type AddProps = {
     record_type: 'A' | 'AAAA';
     record_line: string | '默认';
     value: string;
-} & ListRecordsParams;
-export const addRecord = async (params: AddParams) => {
+} & ListRecordsProps;
+export const addRecord = async (props: AddProps) => {
     const result = await http.post<CommonReturn>(
         '/Record.Create',
         new URLSearchParams({
             ...commonParams,
-            ...params,
+            ...props,
+        })
+    );
+    return result.data;
+};
+
+type ModifyProps = {
+    record_id: string;
+} & AddProps;
+export const modifyRecord = async (props: ModifyProps) => {
+    const result = await http.post<CommonReturn>(
+        '/Record.Modify',
+        new URLSearchParams({
+            ...commonParams,
+            ...props,
         })
     );
     return result.data;
