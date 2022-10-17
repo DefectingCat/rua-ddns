@@ -16,12 +16,35 @@ type ListRecordsParams = {
     domain: string;
     sub_domain?: string;
 };
+type CommonReturn = {
+    status: {
+        code: string;
+        message: string;
+        created_at: Date;
+    };
+};
 /**
  * https://docs.dnspod.cn/api/record-list/
  */
 export const listRecords = async (params: ListRecordsParams) => {
-    const result = await http.post(
+    const result = await http.post<CommonReturn>(
         '/Record.List',
+        new URLSearchParams({
+            ...commonParams,
+            ...params,
+        })
+    );
+    return result.data;
+};
+
+type AddParams = {
+    record_type: 'A' | 'AAAA';
+    record_line: string | '默认';
+    value: string;
+} & ListRecordsParams;
+export const addRecord = async (params: AddParams) => {
+    const result = await http.post<CommonReturn>(
+        '/Record.Create',
         new URLSearchParams({
             ...commonParams,
             ...params,
