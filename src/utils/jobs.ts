@@ -59,7 +59,7 @@ const updateRecord = async () => {
     }
 };
 
-export const callback = async () => {
+export const recordJob = async () => {
     logger(`Starting check ip address.`);
     const ip = await getIp();
 
@@ -85,4 +85,10 @@ export const callback = async () => {
 
     logger(`Ip has changed, string update Record.`);
     await updateRecord();
+};
+
+export const scheduleDDNS = () => {
+    // call job immediatly
+    recordJob();
+    schedule.scheduleJob('*/1 * * * *', recordJob);
 };

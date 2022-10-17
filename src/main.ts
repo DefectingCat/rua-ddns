@@ -1,10 +1,10 @@
 import express from 'express';
+import expressWinston from 'express-winston';
 import helmet from 'helmet';
 import winston from 'winston';
-import expressWinston from 'express-winston';
-import helloRouter from './routes/hello.js';
 import 'zx/globals';
-import { callback } from './utils/jobs.js';
+import helloRouter from './routes/hello.js';
+import { scheduleDDNS } from './utils/jobs.js';
 
 const app = express();
 const port = 4000;
@@ -44,7 +44,7 @@ app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
 
-callback();
+scheduleDDNS();
 
 // Export default
 export default app;
