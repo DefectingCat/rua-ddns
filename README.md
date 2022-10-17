@@ -1,4 +1,4 @@
-## Express TypeScript start template
+# DDNS for dnspod
 
 ## Token format
 
