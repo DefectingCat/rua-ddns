@@ -23,11 +23,31 @@ type CommonReturn = {
         created_at: Date;
     };
 };
+export interface ListRecords extends CommonReturn {
+    records: RecordList[];
+}
+export interface RecordList {
+    id: string;
+    ttl: string;
+    value: string;
+    enabled: string;
+    status: string;
+    updated_on: Date;
+    name: string;
+    line: string;
+    line_id: string;
+    type: string;
+    weight: null;
+    monitor_status: string;
+    remark: string;
+    use_aqb: string;
+    mx: string;
+}
 /**
  * https://docs.dnspod.cn/api/record-list/
  */
 export const listRecords = async (params: ListRecordsParams) => {
-    const result = await http.post<CommonReturn>(
+    const result = await http.post<ListRecords>(
         '/Record.List',
         new URLSearchParams({
             ...commonParams,

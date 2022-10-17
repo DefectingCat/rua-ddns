@@ -1,22 +1,24 @@
 import schedule from 'node-schedule';
 import config from '../config.js';
-import { addRecord, getIp, listRecords } from './ddns.js';
+import { addRecord, getIp, ListRecords, listRecords } from './ddns.js';
 import logger from './logger.js';
 
 let lastIp = '';
+let list: null | ListRecords = null;
 
 const updateRecord = async () => {
-    const list = await listRecords({
-        domain: config.domain,
-        sub_domain: `${config.subDomain}.${config.domain}`,
-    });
-
+    if (!list) {
+        list = await listRecords({
+            domain: config.domain,
+            sub_domain: config.subDomain,
+        });
+    }
     if (list.status.code === '10') {
         // add
         logger(`Starting add new record.`);
         const result = await addRecord({
             domain: config.domain,
-            sub_domain: `${config.subDomain}.${config.domain}`,
+            sub_domain: config.subDomain,
             record_line: '默认',
             record_type: config.netType === 'inet6' ? 'AAAA' : 'A',
             value: lastIp,
@@ -24,7 +26,7 @@ const updateRecord = async () => {
         logger(
             {
                 domain: config.domain,
-                sub_domain: `${config.subDomain}.${config.domain}`,
+                sub_domain: config.subDomain,
                 record_line: '默认',
                 record_type: config.netType === 'inet6' ? 'AAAA' : 'A',
                 value: lastIp,
@@ -40,6 +42,7 @@ const updateRecord = async () => {
             throw new Error(result.status.message);
         }
     } else {
+        // update
     }
 };
 
@@ -49,11 +52,24 @@ export const callback = async () => {
 
     if (!ip) throw new Error('Can not get system ip address!');
 
-    if (lastIp === ip) {
-        logger(`Ip not changed.`);
-    } else {
-        logger(`Ip has changed, string update Record.`);
-        lastIp = ip;
-        await updateRecord();
+    if (lastIp === ip) return logger(`Ip not changed.`);
+
+    // Double check.
+    list = await listRecords({
+        domain: config.domain,
+        sub_domain: config.subDomain,
+    });
+
+    lastIp = ip;
+    if (list?.records.length) {
+        const notChanged = list.records.find((record) => record.value === ip);
+        if (notChanged) {
+            return logger(
+                `Record address not changed. Current ip: ${lastIp} record ip: ${notChanged.value}`
+            );
+        }
     }
+
+    logger(`Ip has changed, string update Record.`);
+    await updateRecord();
 };
