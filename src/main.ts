@@ -1,4 +1,3 @@
-#!/usr/bin/env zx
 import express from 'express';
 import helmet from 'helmet';
 import winston from 'winston';
@@ -6,10 +5,10 @@ import expressWinston from 'express-winston';
 import helloRouter from './routes/hello.js';
 import 'zx/globals';
 import config from './config.js';
-import { listRecords } from './utils/ddns.js';
+import { listRecords, getIp } from './utils/ddns.js';
 
 const app = express();
-const port = 3000;
+const port = 4000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -46,15 +45,14 @@ app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
 
-const showIp = $`ip -6 add show ${config.devName} | grep "${config.netType}" | grep "scope global dynamic noprefixroute"`;
 (async () => {
-    console.log((await showIp).stdout);
-    console.log(
-        await listRecords({
-            domain: config.domain,
-            sub_domain: `${config.subDomain}.${config.domain}`,
-        })
-    );
+    await getIp();
+    // console.log(
+    //     await listRecords({
+    //         domain: config.domain,
+    //         sub_domain: `${config.subDomain}.${config.domain}`,
+    //     })
+    // );
 })();
 
 // Export default

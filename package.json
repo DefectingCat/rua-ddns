@@ -20,7 +20,6 @@
         "express": "^4.18.1",
         "express-winston": "^4.2.0",
         "helmet": "^6.0.0",
-        "http-status-codes": "^2.2.0",
         "winston": "^3.8.1",
         "zx": "^7.1.1"
     },
