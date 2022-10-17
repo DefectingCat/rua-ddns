@@ -5,6 +5,7 @@ import winston from 'winston';
 import expressWinston from 'express-winston';
 import helloRouter from './routes/hello.js';
 import 'zx/globals';
+import config from 'config.js';
 
 const app = express();
 const port = 3000;
@@ -44,7 +45,7 @@ app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
 
-const showIp = $`ip -6 add show eno1 | grep inet6`;
+const showIp = $`ip -6 add show ${config.devName} | grep inet6`;
 (async () => {
     console.log((await showIp).stdout);
 })();
