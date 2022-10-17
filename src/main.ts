@@ -1,8 +1,10 @@
+#!/usr/bin/env zx
 import express from 'express';
 import helmet from 'helmet';
 import winston from 'winston';
 import expressWinston from 'express-winston';
-import helloRouter from './routes/hello';
+import helloRouter from './routes/hello.js';
+import 'zx/globals';
 
 const app = express();
 const port = 3000;
@@ -41,6 +43,11 @@ app.use(
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
+
+const showIp = $`ip -6 add show eno1 | grep inet6`;
+(async () => {
+    console.log((await showIp).stdout);
+})();
 
 // Export default
 export default app;
