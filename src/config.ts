@@ -7,5 +7,5 @@ export default {
 
     // listen port
     port: 4000,
-    socketPort: 3998,
+    socketPort: 3999,
 };
