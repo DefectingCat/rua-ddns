@@ -9,8 +9,7 @@ import { callback, scheduleDDNS } from './utils/jobs.js';
 import logger from './utils/logger.js';
 import io, { httpServer } from './utils/socket.js';
 
-const { port } = config;
-export const socketPort = port - 1;
+const { port, socketPort } = config;
 const app = express();
 
 app.use(express.json());

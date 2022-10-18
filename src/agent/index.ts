@@ -4,7 +4,7 @@ import config from '../config.js';
 import { getIp } from '../utils/ddns.js';
 import 'zx/globals';
 
-const serverAdd = `http://localhost:${config.port - 1}`;
+const serverAdd = `http://localhost:${config.socketPort}`;
 const socket = io(serverAdd);
 
 logger(`Starting connect to server. ${serverAdd}`);
