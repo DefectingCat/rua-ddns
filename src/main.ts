@@ -3,18 +3,15 @@ import expressWinston from 'express-winston';
 import helmet from 'helmet';
 import winston from 'winston';
 import 'zx/globals';
-import helloRouter from './routes/hello.js';
-import { Server } from 'socket.io';
-import { createServer } from 'http';
-import logger from './utils/logger.js';
 import config from './config.js';
-import './agent/index.js';
+import helloRouter from './routes/hello.js';
+import { callback, scheduleDDNS } from './utils/jobs.js';
+import logger from './utils/logger.js';
+import io, { httpServer } from './utils/socket.js';
 
 const { port } = config;
-const socketPort = port - 1;
+export const socketPort = port - 1;
 const app = express();
-const httpServer = createServer(app);
-export const io = new Server(httpServer);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -57,9 +54,12 @@ httpServer.listen(socketPort, () => {
 io.on('connection', (socket) => {
     logger(`Socket client connect success! ${socket.id}`);
     socket.emit('pong', 'Connect success.');
+    socket.on('sentIp', (ip: string) => {
+        logger(`Get ip address ${ip}}`);
+        callback(ip);
+    });
+    scheduleDDNS();
 });
-
-// scheduleDDNS();
 
 // Export default
 export default app;

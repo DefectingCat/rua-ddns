@@ -256,6 +256,11 @@
   resolved "https://registry.npmmirror.com/@types/which/-/which-2.0.1.tgz#27ecd67f915b7c3d6ba552135bb1eecd66e63501"
   integrity sha512-Jjakcv8Roqtio6w1gr0D7y6twbhx6gGgFGF5BLwajPpnOIOxFkakFhCq+LmyyeAz7BX6ULrjBOxdKaCDy+4+dQ==
 
+"@vercel/ncc@^0.34.0":
+  version "0.34.0"
+  resolved "https://registry.npmmirror.com/@vercel/ncc/-/ncc-0.34.0.tgz#d0139528320e46670d949c82967044a8f66db054"
+  integrity sha512-G9h5ZLBJ/V57Ou9vz5hI8pda/YQX5HQszCs3AmIus3XzsmRn/0Ptic5otD3xVST8QLKk7AMk7AqpsyQGN7MZ9A==
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.npmmirror.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"

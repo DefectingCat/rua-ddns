@@ -1,13 +1,8 @@
 import schedule from 'node-schedule';
 import config from '../config.js';
-import {
-    addRecord,
-    getIp,
-    ListRecords,
-    listRecords,
-    modifyRecord,
-} from './ddns.js';
+import { addRecord, ListRecords, listRecords, modifyRecord } from './ddns.js';
 import logger from './logger.js';
+import io from './socket.js';
 
 let lastIp = '';
 let list: null | ListRecords = null;
@@ -59,10 +54,7 @@ const updateRecord = async () => {
     }
 };
 
-export const recordJob = async () => {
-    logger(`Starting check ip address.`);
-    const ip = await getIp();
-
+export const callback = async (ip: string) => {
     if (!ip) throw new Error('Can not get system ip address!');
 
     if (lastIp === ip) return logger(`Ip not changed.`);
@@ -85,6 +77,12 @@ export const recordJob = async () => {
 
     logger(`Ip has changed, string update Record.`);
     await updateRecord();
+};
+
+export const recordJob = async () => {
+    logger(`Starting check ip address.`);
+    // const ip = await getIp();
+    io.emit('getIp');
 };
 
 export const scheduleDDNS = () => {
