@@ -1,11 +1,9 @@
 import schedule from 'node-schedule';
 import config from '../config.js';
-import { addRecord, ListRecords, listRecords, modifyRecord } from './ddns.js';
+import store, { ClientStatus } from '../store.js';
+import { addRecord, listRecords, modifyRecord } from './ddns.js';
 import logger from './logger.js';
 import io from './socket.js';
-
-let lastIp = '';
-let list: null | ListRecords = null;
 
 const updateRecord = async () => {
     const props = {
@@ -14,23 +12,23 @@ const updateRecord = async () => {
         record_line: '默认',
         record_type:
             config.netType === 'inet6' ? 'AAAA' : ('A' as 'A' | 'AAAA'),
-        value: lastIp,
+        value: store.lastIp,
     };
 
-    if (!list) {
-        list = await listRecords({
+    if (!store.list) {
+        store.list = await listRecords({
             domain: config.domain,
             sub_domain: config.subDomain,
         });
     }
-    if (list.status.code === '10  ') {
+    if (store.list.status.code === '10  ') {
         // add
         logger(`Starting add new record.`);
         const result = await addRecord(props);
         logger(props, result);
         if (result.status.code === '1') {
             logger(
-                `Add DNS record ${config.subDomain}.${config.domain} to ${lastIp} success!`
+                `Add DNS record ${config.subDomain}.${config.domain} to ${store.lastIp} success!`
             );
         } else {
             console.error(result);
@@ -40,12 +38,12 @@ const updateRecord = async () => {
         // update
         const result = await modifyRecord({
             ...props,
-            record_id: list.records[0].id,
+            record_id: store.list.records[0].id,
         });
         logger(props, result);
         if (result.status.code === '1') {
             logger(
-                `Update DNS record ${config.subDomain}.${config.domain} to ${lastIp} success!`
+                `Update DNS record ${config.subDomain}.${config.domain} to ${store.lastIp} success!`
             );
         } else {
             console.error(result);
@@ -57,20 +55,22 @@ const updateRecord = async () => {
 export const callback = async (ip: string) => {
     if (!ip) throw new Error('Can not get system ip address!');
 
-    if (lastIp === ip) return logger(`Ip not changed.`);
+    if (store.lastIp === ip) return logger(`Ip not changed.`);
 
     // Double check.
-    list = await listRecords({
+    store.list = await listRecords({
         domain: config.domain,
         sub_domain: config.subDomain,
     });
 
-    lastIp = ip;
-    if (list?.records.length) {
-        const notChanged = list.records.find((record) => record.value === ip);
+    store.lastIp = ip;
+    if (store.list?.records.length) {
+        const notChanged = store.list.records.find(
+            (record) => record.value === ip
+        );
         if (notChanged) {
             return logger(
-                `Record address not changed. Current ip: ${lastIp} record ip: ${notChanged.value}`
+                `Record address not changed. Current ip: ${store.lastIp} record ip: ${notChanged.value}`
             );
         }
     }
@@ -80,9 +80,13 @@ export const callback = async (ip: string) => {
 };
 
 export const recordJob = async () => {
-    logger(`Starting check ip address.`);
-    // const ip = await getIp();
-    io.emit('getIp');
+    if (store.client === ClientStatus.Connected) {
+        logger(`Starting check ip address.`);
+        // const ip = await getIp();
+        io.emit('getIp');
+    } else {
+        logger(`Agent is not connected.`);
+    }
 };
 
 export const scheduleDDNS = () => {

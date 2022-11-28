@@ -6,6 +6,6 @@ export default {
     subDomain: 'host',
 
     // listen port
-    port: 4000,
-    socketPort: 3999,
+    port: 4002,
+    socketPort: 4003,
 };

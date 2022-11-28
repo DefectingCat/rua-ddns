@@ -1,6 +1,7 @@
 import express from 'express';
 import expressWinston from 'express-winston';
 import helmet from 'helmet';
+import store, { ClientStatus } from './store.js';
 import winston from 'winston';
 import 'zx/globals';
 import config from './config.js';
@@ -28,7 +29,7 @@ app.use(
     })
 );
 
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
     res.send('Hello World!');
 });
 app.use(helloRouter);
@@ -51,10 +52,11 @@ httpServer.listen(socketPort, () => {
 });
 
 io.on('connection', (socket) => {
+    store.client = ClientStatus.Connected;
     logger(`Socket client connect success! ${socket.id}`);
     socket.emit('pong', 'Connect success.');
     socket.on('sentIp', (ip: string) => {
-        logger(`Get ip address ${ip}}`);
+        logger(`Get ip address ${ip}`);
         callback(ip);
     });
     scheduleDDNS();
