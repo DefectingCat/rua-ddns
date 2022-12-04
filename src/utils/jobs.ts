@@ -91,6 +91,10 @@ export const recordJob = async () => {
 
 export const scheduleDDNS = () => {
     // call job immediatly
-    recordJob();
-    schedule.scheduleJob('*/1 * * * *', recordJob);
+    try {
+        recordJob();
+        schedule.scheduleJob('*/1 * * * *', recordJob);
+    } catch (err) {
+        logger(err);
+    }
 };

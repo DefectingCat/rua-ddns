@@ -57,7 +57,11 @@ io.on('connection', (socket) => {
     socket.emit('pong', 'Connect success.');
     socket.on('sentIp', (ip: string) => {
         logger(`Get ip address ${ip}`);
-        callback(ip);
+        try {
+            callback(ip);
+        } catch (err) {
+            logger(err);
+        }
     });
     scheduleDDNS();
 });
