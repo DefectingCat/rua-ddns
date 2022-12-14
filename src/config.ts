@@ -1,5 +1,5 @@
 export default {
-    devName: 'eno1',
+    devName: 'enp2s0',
     // inet | inet6
     netType: 'inet6',
     domain: 'rua.plus',
