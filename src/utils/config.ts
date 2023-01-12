@@ -8,15 +8,29 @@ const filename = 'config.json';
 const filePath = path.resolve('./', filename);
 const v = new Validator();
 
-export const validateConfig = (config?: string) => {
+export const parseConfig = (config?: string) => {
     try {
         logger(`Starting parse config content.`);
         if (!config) return logger(`Config content is empty ${config}`);
-        const content = JSON.parse(config);
-        return v.validate(content, schema);
+        return JSON.parse(config);
     } catch (e) {
         console.error(e);
         logger(`Parse config file error: ${e}.`);
+    }
+};
+
+export const validateConfig = (config?: string) => {
+    try {
+        logger(`Starting validate config content.`);
+        if (!config) return logger(`Config content is empty ${config}`);
+        const content = parseConfig(config);
+        return {
+            valid: v.validate(content, schema).valid,
+            content,
+        };
+    } catch (e) {
+        console.error(e);
+        logger(`Validate config file error: ${e}.`);
     }
 };
 

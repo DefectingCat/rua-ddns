@@ -1,6 +1,9 @@
-import { readConfig, validateConfig } from './utils/config';
+import store, { initStore } from './utils/store';
+import logger from './utils/logger';
 
-readConfig().then((config) => {
-    const result = validateConfig(config);
-    if (result) console.log(result.valid);
-});
+const main = async () => {
+    await initStore();
+    console.log(store);
+};
+
+main().then(() => logger('Started.'));
