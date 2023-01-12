@@ -1,11 +1,11 @@
-import store, { initStore } from './utils/store';
+import { initStore } from './utils/store';
 import logger from './utils/logger';
 import { getIp } from './utils/ip';
 
 const main = async () => {
     await initStore();
-    console.log(store.config);
-    getIp();
+    const ip = await getIp();
+    console.log(ip);
 };
 
 main().then(() => logger('Started.'));
