@@ -5,6 +5,14 @@
     "repository": "https://github.com/DefectingCat/express-template.git",
     "author": "DefectingCat <i@defect.ink>",
     "license": "MIT",
+    "bin": "build/main.js",
+    "pkg": {
+        "scripts": "build/**/*.js",
+        "targets": [
+            "node16-linux-x64"
+        ],
+        "outputPath": "dist"
+    },
     "devDependencies": {
         "@types/node": "^18.11.18",
         "@types/node-schedule": "^2.1.0",
