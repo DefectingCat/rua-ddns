@@ -1,7 +1,9 @@
 import { exec } from 'child_process';
 import store from './store';
+import logger from './logger';
 
-export const getIp = async () => {
+export const getIp = async (): Promise<string> => {
+    logger(`Starting get ip address.`);
     const { config } = store;
     if (!config) throw Error('Can not get config.');
     const showV6 = `ip -6 add show ${config.devName} | grep "${config.netType}" | grep "scope global dynamic noprefixroute"`;
@@ -22,7 +24,6 @@ export const getIp = async () => {
                 console.log(`stderr: ${stderr}`);
                 return;
             }
-
             const ip = stdout;
             switch (config.netType) {
                 case 'inet6': {
@@ -33,7 +34,9 @@ export const getIp = async () => {
                                 .map((text) => text.trim())[0]
                                 .split(' ')[1]
                     );
-                    resolve(address[0]?.split('/')[0]);
+                    const addr = address[0]?.split('/')[0];
+                    logger(`Get ipv6 address ${addr}`);
+                    resolve(addr);
                     break;
                 }
                 /**

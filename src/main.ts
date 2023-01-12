@@ -1,11 +1,13 @@
 import { initStore } from './utils/store';
 import logger from './utils/logger';
-import { getIp } from './utils/ip';
+import { scheduleDDNS } from './utils/jobs';
 
 const main = async () => {
     await initStore();
-    const ip = await getIp();
-    console.log(ip);
+};
+const startJob = () => {
+    logger('Server started.');
+    scheduleDDNS();
 };
 
-main().then(() => logger('Started.'));
+main().then(startJob);

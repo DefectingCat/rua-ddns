@@ -1,3 +1,4 @@
+
 # DDNS for dnspod
 
 ## Token format
