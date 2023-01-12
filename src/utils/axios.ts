@@ -11,3 +11,5 @@ http.defaults.headers.common['Content-Type'] =
 http.interceptors.request.use((config) => {
     return config;
 });
+
+export default http;
